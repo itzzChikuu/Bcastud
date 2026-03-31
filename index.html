@@ -2,8 +2,24 @@
 <html>
 <head>
 <title>My Store</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+  @media (max-width:600px){
+
+.product{
+width:90%;
+}
+
+h1{
+font-size:22px;
+}
+
+button{
+width:90%;
+}
+
+}
 
 body{
 font-family: Arial;
@@ -25,13 +41,13 @@ justify-content:center;
 
 .product{
 background:white;
-width:250px;
+width:90%;
+max-width:250px;
 margin:15px;
 padding:15px;
 border-radius:10px;
 box-shadow:0 0 10px gray;
 }
-
 .product img{
 width:100%;
 height:200px;
