@@ -194,6 +194,8 @@ My Store
 </div>
 
 <script type="module">
+  import { getStorage, ref, uploadBytes, getDownloadURL }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, addDoc, collection, getDocs, deleteDoc, doc }
@@ -209,6 +211,7 @@ appId: "1:878871303738:web:c7ee144a573e0689a6c703"
 };
 
 const app = initializeApp(firebaseConfig);
+const storage = getStorage(app);
 const db = getFirestore(app);
 
 let isOwner=false;
@@ -228,7 +231,7 @@ alert("Wrong Password");
 
 }
 
-window.addProduct=async function(){
+window.addProduct = async function(){
 
 let name=document.getElementById("pname").value;
 let price=document.getElementById("pprice").value;
@@ -240,19 +243,19 @@ alert("Upload at least 1 image");
 return;
 }
 
-let images=[];
+let imageUrls=[];
 
 for(let i=0;i<files.length;i++){
 
-let reader=new FileReader();
+let file=files[i];
 
-await new Promise(resolve=>{
-reader.onload=function(e){
-images.push(e.target.result);
-resolve();
-}
-reader.readAsDataURL(files[i]);
-});
+let storageRef = ref(storage,"products/"+Date.now()+"_"+file.name);
+
+await uploadBytes(storageRef,file);
+
+let url = await getDownloadURL(storageRef);
+
+imageUrls.push(url);
 
 }
 
@@ -260,14 +263,15 @@ await addDoc(collection(db,"products"),{
 name:name,
 price:price,
 desc:desc,
-images:images
+images:imageUrls
 });
 
-alert("Product Added");
+alert("Product Uploaded Successfully");
 
 loadProducts();
 
 }
+
 
 async function loadProducts(){
 
