@@ -5,6 +5,35 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+  .slider{
+position:relative;
+}
+
+.slider img{
+width:100%;
+height:200px;
+object-fit:cover;
+border-radius:10px;
+}
+
+.slideBtn{
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+background:rgba(0,0,0,0.5);
+color:white;
+border:none;
+padding:6px 10px;
+cursor:pointer;
+}
+
+.prev{
+left:5px;
+}
+
+.next{
+right:5px;
+}
 
 body{
 font-family: Arial;
@@ -165,6 +194,43 @@ My Store
 </div>
 
 <script type="module">
+  let slideIndex={};
+
+window.nextSlide=function(id){
+
+let slides=document.getElementsByClassName("slide"+id);
+
+if(!slideIndex[id]) slideIndex[id]=0;
+
+slides[slideIndex[id]].style.display="none";
+
+slideIndex[id]=(slideIndex[id]+1)%slides.length;
+
+slides[slideIndex[id]].style.display="block";
+
+}
+
+window.prevSlide=function(id){
+
+let slides=document.getElementsByClassName("slide"+id);
+
+if(!slideIndex[id]) slideIndex[id]=0;
+
+slides[slideIndex[id]].style.display="none";
+
+slideIndex[id]=(slideIndex[id]-1+slides.length)%slides.length;
+
+slides[slideIndex[id]].style.display="block";
+
+}
+
+window.openImage=function(src){
+
+let win=window.open("");
+
+win.document.write("<img src='"+src+"' style='width:100%'>");
+
+}
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
@@ -252,21 +318,28 @@ reader.readAsDataURL(file);
 
 async function loadProducts(){
 
-let html="";
+let images = p.images ? p.images : [p.img];
 
-const querySnapshot=await getDocs(collection(db,"products"));
+let imgHTML="";
 
-querySnapshot.forEach((d)=>{
-
-let p=d.data();
-
-let id=d.id;
+images.forEach((img,i)=>{
+imgHTML+=`<img src="${img}" class="slide${id}" 
+style="${i==0?'display:block':'display:none'}"
+onclick="openImage('${img}')">`;
+});
 
 html+=`
 
 <div class="product">
 
-<img src="${p.img}">
+<div class="slider">
+
+${imgHTML}
+
+<button class="slideBtn prev" onclick="prevSlide('${id}')">❮</button>
+<button class="slideBtn next" onclick="nextSlide('${id}')">❯</button>
+
+</div>
 
 <h3>${p.name}</h3>
 
