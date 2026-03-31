@@ -4,6 +4,7 @@
 <title>My Store</title>
 
 <style>
+
 body{
 font-family: Arial;
 background:#f4f4f4;
@@ -68,6 +69,7 @@ margin-right:auto;
 border-radius:10px;
 box-shadow:0 0 10px gray;
 }
+
 </style>
 </head>
 
@@ -95,138 +97,139 @@ box-shadow:0 0 10px gray;
 
 </div>
 
-<script>
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+getFirestore,
+addDoc,
+collection,
+getDocs,
+deleteDoc,
+doc
+}
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyBkyMRqVdT8os6CABAycIlWxOUxNnUmXhk",
+authDomain: "mystor-9e60e.firebaseapp.com",
+projectId: "mystor-9e60e",
+storageBucket: "mystor-9e60e.firebasestorage.app",
+messagingSenderId: "878871303738",
+appId: "1:878871303738:web:c7ee144a573e0689a6c703"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
 
 let isOwner=false;
 
-function ownerLogin(){
-let pass = prompt("Enter Owner Password");
+window.ownerLogin=function(){
+
+let pass=prompt("Enter Owner Password");
 
 if(pass==="1234"){
+
 isOwner=true;
+
 document.getElementById("adminPanel").style.display="block";
-renderProducts();
+
+loadProducts();
+
 }else{
+
 alert("Wrong Password");
-}
-}
-
-let products = JSON.parse(localStorage.getItem("products")) || [];
-
-function saveProducts(){
-localStorage.setItem("products",JSON.stringify(products));
-}
-
-function renderProducts(){
-
-let html="";
-
-products.forEach((p,index)=>{
-
-html+=`
-<div class="product">
-
-<img src="${p.img}">
-<h3>${p.name}</h3>
-<p>${p.desc}</p>
-<p class="price">₹${p.price}</p>
-
-${isOwner ? `<button class="deleteBtn" onclick="deleteProduct(${index})">Delete</button>` : ""}
-
-</div>
-`;
-
-});
-
-document.getElementById("productList").innerHTML=html;
 
 }
 
-async function addProduct(){
+}
+
+window.addProduct=async function(){
 
 let name=document.getElementById("pname").value;
+
 let price=document.getElementById("pprice").value;
+
 let desc=document.getElementById("pdesc").value;
 
+let file=document.getElementById("pimage").files[0];
+
+let reader=new FileReader();
+
+reader.onload=async function(e){
+
 await addDoc(collection(db,"products"),{
+
 name:name,
+
 price:price,
-desc:desc
+
+desc:desc,
+
+img:e.target.result
+
 });
 
 alert("Product Added");
 
-async function loadProducts(){
-
-let html="";
-
-const querySnapshot = await getDocs(collection(db,"products"));
-
-querySnapshot.forEach((docu)=>{
-
-let p = docu.data();
-
-html+=`
-<div class="product">
-
-<h3>${p.name}</h3>
-<p>${p.desc}</p>
-<p class="price">₹${p.price}</p>
-
-</div>
-`;
-
-});
-
-document.getElementById("productList").innerHTML=html;
-
-}
-
 loadProducts();
-saveProducts();
-renderProducts();
 
-}
+};
 
 reader.readAsDataURL(file);
 
 }
 
-function deleteProduct(index){
+async function loadProducts(){
 
-products.splice(index,1);
+let html="";
 
-saveProducts();
-renderProducts();
+const querySnapshot=await getDocs(collection(db,"products"));
+
+querySnapshot.forEach((d)=>{
+
+let p=d.data();
+
+let id=d.id;
+
+html+=`
+
+<div class="product">
+
+<img src="${p.img}">
+
+<h3>${p.name}</h3>
+
+<p>${p.desc}</p>
+
+<p class="price">₹${p.price}</p>
+
+${isOwner ? `<button class="deleteBtn" onclick="deleteProduct('${id}')">Delete</button>` : ""}
+
+</div>
+
+`;
+
+});
+
+document.getElementById("productList").innerHTML=html;
 
 }
 
-renderProducts();
+window.deleteProduct=async function(id){
+
+await deleteDoc(doc(db,"products",id));
+
+loadProducts();
+
+}
+
+loadProducts();
 
 </script>
-  <script>
-    // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBkyMRqVdT8os6CABAycIlWxOUxNnUmXhk",
-  authDomain: "mystor-9e60e.firebaseapp.com",
-  projectId: "mystor-9e60e",
-  storageBucket: "mystor-9e60e.firebasestorage.app",
-  messagingSenderId: "878871303738",
-  appId: "1:878871303738:web:c7ee144a573e0689a6c703",
-  measurementId: "G-9W26R7XHB1"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-  </script>
 
 </body>
 </html>
