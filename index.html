@@ -6,78 +6,60 @@
 
 <style>
 
-*{
-box-sizing:border-box;
-}
-
 body{
-font-family:'Segoe UI',Arial,sans-serif;
-background:#f1f5f9;
+font-family: Arial;
+background:linear-gradient(135deg,#eef2ff,#f8fafc);
 margin:0;
+text-align:center;
 }
 
-/* Top Header */
+/* Header */
 
-.topbar{
-background:linear-gradient(135deg,#1d4ed8,#7c3aed);
+header{
+background:linear-gradient(135deg,#2563eb,#4f46e5);
 color:white;
+padding:20px;
 font-size:28px;
-font-weight:600;
-padding:18px;
-text-align:center;
+font-weight:bold;
 letter-spacing:1px;
-box-shadow:0 4px 15px rgba(0,0,0,0.2);
+box-shadow:0 4px 15px rgba(0,0,0,0.25);
 }
 
 /* Container */
 
 .container{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-gap:20px;
-padding:25px;
-max-width:1200px;
-margin:auto;
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+padding:20px;
 }
 
 /* Product Card */
 
 .product{
 background:white;
-border-radius:14px;
+width:90%;
+max-width:250px;
+margin:15px;
 padding:15px;
-box-shadow:0 6px 18px rgba(0,0,0,0.15);
+border-radius:15px;
+box-shadow:0 6px 20px rgba(0,0,0,0.15);
 transition:0.3s;
-text-align:center;
 }
 
 .product:hover{
 transform:translateY(-6px);
-box-shadow:0 12px 25px rgba(0,0,0,0.25);
+box-shadow:0 12px 30px rgba(0,0,0,0.25);
 }
 
 /* Image */
 
 .product img{
 width:100%;
-height:190px;
+height:200px;
 object-fit:cover;
-border-radius:10px;
+border-radius:12px;
 margin-bottom:10px;
-}
-
-/* Title */
-
-.product h3{
-margin:8px 0;
-font-size:18px;
-}
-
-/* Description */
-
-.product p{
-font-size:14px;
-color:#555;
 }
 
 /* Price */
@@ -86,81 +68,69 @@ color:#555;
 color:#16a34a;
 font-size:22px;
 font-weight:bold;
-margin-top:6px;
 }
 
 /* Buttons */
 
 button{
-background:#2563eb;
+background:linear-gradient(135deg,#2563eb,#4f46e5);
 color:white;
 border:none;
-padding:10px 14px;
-border-radius:8px;
+padding:10px 16px;
 cursor:pointer;
-font-weight:600;
-transition:0.2s;
+border-radius:8px;
+margin:5px;
+font-weight:bold;
+transition:0.3s;
 }
 
 button:hover{
-background:#1d4ed8;
+opacity:0.9;
 }
 
 .deleteBtn{
-background:#ef4444;
-}
-
-.deleteBtn:hover{
-background:#dc2626;
-}
-
-/* Owner button */
-
-body > button{
-margin-top:15px;
+background:linear-gradient(135deg,#ef4444,#dc2626);
 }
 
 /* Admin Panel */
 
 #adminPanel{
 display:none;
+margin-top:30px;
 background:white;
-margin:30px auto;
 padding:20px;
-border-radius:14px;
-box-shadow:0 8px 25px rgba(0,0,0,0.2);
 width:90%;
-max-width:380px;
-}
-
-#adminPanel h2{
-margin-top:0;
+max-width:350px;
+margin-left:auto;
+margin-right:auto;
+border-radius:15px;
+box-shadow:0 8px 25px rgba(0,0,0,0.2);
 }
 
 /* Inputs */
 
 input,textarea{
-width:100%;
+width:90%;
 padding:10px;
-border-radius:7px;
-border:1px solid #ddd;
-font-size:14px;
-}
-
-textarea{
-height:70px;
+border-radius:6px;
+border:1px solid #ccc;
 }
 
 /* Mobile */
 
-@media(max-width:600px){
+@media (max-width:600px){
 
-.topbar{
+header{
 font-size:22px;
+padding:15px;
 }
 
-.container{
-padding:15px;
+.product{
+width:90%;
+}
+
+button{
+width:90%;
 }
 
 }
@@ -170,7 +140,7 @@ padding:15px;
 
 <body>
 
-<header class="topbar">
+<header>
 My Store
 </header>
 
