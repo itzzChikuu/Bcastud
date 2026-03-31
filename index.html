@@ -193,56 +193,11 @@ My Store
 
 </div>
 
+```javascript
 <script type="module">
-  let slideIndex={};
-
-window.nextSlide=function(id){
-
-let slides=document.getElementsByClassName("slide"+id);
-
-if(!slideIndex[id]) slideIndex[id]=0;
-
-slides[slideIndex[id]].style.display="none";
-
-slideIndex[id]=(slideIndex[id]+1)%slides.length;
-
-slides[slideIndex[id]].style.display="block";
-
-}
-
-window.prevSlide=function(id){
-
-let slides=document.getElementsByClassName("slide"+id);
-
-if(!slideIndex[id]) slideIndex[id]=0;
-
-slides[slideIndex[id]].style.display="none";
-
-slideIndex[id]=(slideIndex[id]-1+slides.length)%slides.length;
-
-slides[slideIndex[id]].style.display="block";
-
-}
-
-window.openImage=function(src){
-
-let win=window.open("");
-
-win.document.write("<img src='"+src+"' style='width:100%'>");
-
-}
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-getFirestore,
-addDoc,
-collection,
-getDocs,
-deleteDoc,
-doc
-}
-
+import { getFirestore, addDoc, collection, getDocs, deleteDoc, doc }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -255,27 +210,21 @@ appId: "1:878871303738:web:c7ee144a573e0689a6c703"
 };
 
 const app = initializeApp(firebaseConfig);
-
 const db = getFirestore(app);
 
 let isOwner=false;
+let slideIndex={};
 
 window.ownerLogin=function(){
 
 let pass=prompt("Enter Owner Password");
 
 if(pass==="1234"){
-
 isOwner=true;
-
 document.getElementById("adminPanel").style.display="block";
-
 loadProducts();
-
 }else{
-
 alert("Wrong Password");
-
 }
 
 }
@@ -283,40 +232,44 @@ alert("Wrong Password");
 window.addProduct=async function(){
 
 let name=document.getElementById("pname").value;
-
 let price=document.getElementById("pprice").value;
-
 let desc=document.getElementById("pdesc").value;
+let files=document.getElementById("pimage").files;
 
-let file=document.getElementById("pimage").files[0];
+if(files.length==0){
+alert("Upload at least 1 image");
+return;
+}
+
+let images=[];
+
+for(let i=0;i<files.length;i++){
 
 let reader=new FileReader();
 
-reader.onload=async function(e){
+await new Promise(resolve=>{
+reader.onload=function(e){
+images.push(e.target.result);
+resolve();
+}
+reader.readAsDataURL(files[i]);
+});
+
+}
 
 await addDoc(collection(db,"products"),{
-
 name:name,
-
 price:price,
-
 desc:desc,
-
-img:e.target.result
-
+images:images
 });
 
 alert("Product Added");
 
 loadProducts();
 
-};
-
-reader.readAsDataURL(file);
-
 }
 
-```javascript
 async function loadProducts(){
 
 let html="";
@@ -368,17 +321,45 @@ ${isOwner ? `<button class="deleteBtn" onclick="deleteProduct('${id}')">Delete</
 document.getElementById("productList").innerHTML = html;
 
 }
-```
 
+window.nextSlide=function(id){
 
-document.getElementById("productList").innerHTML=html;
+let slides=document.getElementsByClassName("slide"+id);
+
+if(!slideIndex[id]) slideIndex[id]=0;
+
+slides[slideIndex[id]].style.display="none";
+
+slideIndex[id]=(slideIndex[id]+1)%slides.length;
+
+slides[slideIndex[id]].style.display="block";
+
+}
+
+window.prevSlide=function(id){
+
+let slides=document.getElementsByClassName("slide"+id);
+
+if(!slideIndex[id]) slideIndex[id]=0;
+
+slides[slideIndex[id]].style.display="none";
+
+slideIndex[id]=(slideIndex[id]-1+slides.length)%slides.length;
+
+slides[slideIndex[id]].style.display="block";
+
+}
+
+window.openImage=function(src){
+
+let win=window.open("");
+win.document.write("<img src='"+src+"' style='width:100%'>");
 
 }
 
 window.deleteProduct=async function(id){
 
 await deleteDoc(doc(db,"products",id));
-
 loadProducts();
 
 }
@@ -386,6 +367,6 @@ loadProducts();
 loadProducts();
 
 </script>
-
+```
 </body>
 </html>
